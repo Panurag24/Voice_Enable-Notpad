@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice-Enabled Notepad</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Voice-Enabled Notepad</h1>
+        <textarea id="textArea" class="form-control" rows="15" placeholder="Your notes will appear here..."></textarea>
+        <button id="startButton" class="btn btn-primary mt-3">Start Voice Input</button>
+        <button id="clearButton" class="btn btn-danger mt-3">Clear Text</button>
+        <button id="saveButton" class="btn btn-success mt-3">Save Text</button>
+    </div>
+
+    <script>
+        document.getElementById("startButton").onclick = function() {
+            fetch('/start_voice_input')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("textArea").value += data + "\n";
+                });
+        };
+
+        document.getElementById("clearButton").onclick = function() {
+            document.getElementById("textArea").value = "";
+        };
+
+        document.getElementById("saveButton").onclick = function() {
+            const text = document.getElementById("textArea").value;
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "notepad_content.txt";
+            link.click();
+        };
+    </script>
+</body>
+</html>
